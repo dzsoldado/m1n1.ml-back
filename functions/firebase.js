@@ -1,6 +1,6 @@
 const ShortUniqueId = require('short-unique-id');
 const db = require('../firebase')
-const { requestHeadersParser } = require('./helpers')
+const { requestHeadersParser, getCountryFromIp } = require('./helpers')
 
 const uid = new ShortUniqueId({ length: 6 });
 
@@ -48,12 +48,13 @@ async function addClick(headers, urlID){
   
   const date = new Date();
   const requestData = requestHeadersParser(headers)
-
+  const country = await getCountryFromIp(requestData.ip)
 
   await docRef.set({
     urlID,
     date: date.toUTCString(),
-    ...requestData
+    ...requestData,
+    ...country
   });
 }
 
