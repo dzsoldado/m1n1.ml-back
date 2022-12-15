@@ -42,15 +42,16 @@ async function findUrl(short){
   return foundUrl.original_link
 }
 
-async function addClick(req){
+async function addClick(headers, urlID){
   const clicksRef = db.collection('click');
   const docRef = clicksRef.doc();
   
   const date = new Date();
-  const requestData = requestHeadersParser(req)
+  const requestData = requestHeadersParser(headers)
 
 
   await docRef.set({
+    urlID,
     date: date.toUTCString(),
     ...requestData
   });
