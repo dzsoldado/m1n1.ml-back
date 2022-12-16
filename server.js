@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const redirector = require('./routes/redirector')
 const api = require('./routes/api')
@@ -10,6 +11,7 @@ const app = express();
 
 // Middlewares
 app.use(bodyParser.json())
+app.use(cors())
 
 // Routes
 app.use('/', redirector)
