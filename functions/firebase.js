@@ -19,6 +19,7 @@ async function addUrl(original_link, user=null){
       original_link,
       short_link:linkID,
       user,
+      created_at: new Date().toUTCString()
       
     });
     return linkID;
