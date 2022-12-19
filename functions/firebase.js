@@ -1,8 +1,20 @@
 const ShortUniqueId = require('short-unique-id');
-const db = require('../firebase')
+const { db, auth } = require('../firebase')
 const { requestHeadersParser, getCountryFromIp } = require('./helpers')
 
 const uid = new ShortUniqueId({ length: 6 });
+
+async function verifyIdToken(id_token){
+  try{
+    const decodedToken = await auth.verifyIdToken(id_token);
+    return decodedToken;
+    
+  }catch(err){
+    console.log(err)
+    return 0;
+  }
+
+}
 
 async function addUrl(original_link, user=null){
 
@@ -64,4 +76,5 @@ module.exports = {
   addUrl,
   findUrl,
   addClick,
+  verifyIdToken,
 }

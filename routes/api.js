@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router()
-const { addUrl } = require('../functions/firebase')
+const { addUrl, verifyIdToken } = require('../functions/firebase')
 const { isValidUrl } = require('../functions/helpers')
 
 
@@ -8,7 +8,10 @@ router.post('/add', async (req,res)=>{
 
   if (req.body.link && isValidUrl(req.body.link)){
     try{
-      let result = await addUrl(req.body.link, req.body?.user)
+
+      const decodedToken = req.body?.id_token && await verifyIdToken(req.body.id_token);
+
+      const result = await addUrl(req.body.link, decodedToken.uid)
       switch(result){
         case 0: res.json({
           'error': 'An error accured'
@@ -22,6 +25,7 @@ router.post('/add', async (req,res)=>{
       }
     } catch(err){
       res.json({'error':'An error accured'})
+      console.log(err)
     }
     
   }else{
