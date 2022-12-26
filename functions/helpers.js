@@ -17,8 +17,8 @@ function requestHeadersParser(headers){
           : "127.0.0.1"; // when developing locally
   return {
     ip,
-    browser: ua.browser.name,
-    os: ua.os,
+    browser: ua.browser?.name??'unknown',
+    os: ua.os??'unknown',
   }
 }
 
