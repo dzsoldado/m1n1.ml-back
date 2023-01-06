@@ -18,7 +18,10 @@ function requestHeadersParser(headers){
   return {
     ip,
     browser: ua.browser?.name??'unknown',
-    os: ua.os??'unknown',
+    os: {
+      name: ua.os?.name??'unknown',
+      version: ua.os?.version??'unknown',
+    }
   }
 }
 

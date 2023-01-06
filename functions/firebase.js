@@ -47,7 +47,7 @@ async function findUrl(short){
   const linksRef = db.collection('url');
   const result = await linksRef.where('short_link', '==', short).get();
 
-  if(result.empty) return;
+  if(result.empty) return console.log(result);
   let foundUrl;
   result.forEach(doc=>{
     foundUrl = doc.data()
