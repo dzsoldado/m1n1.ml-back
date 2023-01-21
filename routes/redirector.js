@@ -8,9 +8,9 @@ router.get('/', (req, res)=>{
 })
 
 router.get('/:id', async (req,res)=>{
-  const url = await findUrl(req.params.id);
+  const {url, urlID} = await findUrl(req.params.id);
   if(url){
-    addClick(req.headers, req.params.id)
+    addClick(req.headers, urlID)
     res.redirect(url)
   }else{
     res.send('URL NOT FOUND')

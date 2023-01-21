@@ -1,4 +1,5 @@
 const ShortUniqueId = require('short-unique-id');
+const firebase = require('firebase-admin')
 const { db, auth } = require('../firebase')
 const { requestHeadersParser, getCountryFromIp } = require('./helpers')
 
@@ -42,33 +43,33 @@ async function addUrl(original_link, user=null){
   }
 }
 
-async function findUrl(short){
+async function findUrl(short_url){
 
   const linksRef = db.collection('url');
-  const result = await linksRef.where('short_link', '==', short).get();
+  const result = await linksRef.where('short_link', '==', short_url).get();
 
-  if(result.empty) return console.log(result);
-  let foundUrl;
-  result.forEach(doc=>{
-    foundUrl = doc.data()
-  })
-  return foundUrl.original_link
+  if(result.empty) return ;
+
+  return {
+    url: result.docs[0].data().original_link, 
+    urlID: result.docs[0].id
+  };
 }
 
 async function addClick(headers, urlID){
-  const clicksRef = db.collection('click');
-  const docRef = clicksRef.doc();
+  const urlRef = db.collection('url').doc(urlID);
+  const clickRef = urlRef.collection('clicks').doc();
   
   const date = new Date();
   const requestData = requestHeadersParser(headers)
   const country = await getCountryFromIp(requestData.ip)
 
-  await docRef.set({
-    urlID,
+  await clickRef.set({
     date: date.toUTCString(),
     ...requestData,
     ...country
   });
+  await urlRef.update({clicks_count : firebase.firestore.FieldValue.increment(1)})
 }
 
 
